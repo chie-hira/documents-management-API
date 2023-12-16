@@ -23,7 +23,7 @@
 ![機能一覧](https://github.com/chie-hira/documents-management-API/assets/148871501/bb98a6de-6858-4e1d-aefd-62a6b87eb327)
 
 ## ER図
-![ER](https://github.com/chie-hira/documents-management-API/assets/148871501/6e83b733-715c-43e2-a9fe-b8b38c55018e)
+![ER](https://github.com/chie-hira/documents-management-API/assets/148871501/170e2c32-1294-48fa-8361-7b2852249fd4)
 
 
 
