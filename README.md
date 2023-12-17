@@ -9,7 +9,7 @@
 そこで資料を簡単に分類して保管場所を登録するAPIを作成しようと思いました。
 
 ## 主な使用技術
-* JAVA,SpringBoot
+* Java,SpringBoot
 * MySQL
 * Docker
 * JUnit
