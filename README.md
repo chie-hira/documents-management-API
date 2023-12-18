@@ -48,7 +48,8 @@
 ![保存期間ロジック](https://github.com/chie-hira/documents-management-API/assets/148871501/5c31e261-a362-45e0-aa88-68fad33c4839)
 
 ## ER図
-![ER](https://github.com/chie-hira/documents-management-API/assets/148871501/78f6d473-c7ee-43a1-b4c8-83b71a54bb9b)
+![ER](https://github.com/chie-hira/files-management-API/assets/148871501/455f9659-78d5-4b73-abb0-e11eaf303fec)
+
 
 
 
