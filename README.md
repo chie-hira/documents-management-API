@@ -10,7 +10,7 @@
 そこでファイルを分類して保存場所を登録するAPIを作成しようと思いました。
 
 ## 主な使用技術
-* Java,SpringBoot
+* Java、Spring Boot
 * MySQL
 * Docker
 * JUnit
@@ -44,7 +44,7 @@
 ### ユーザー登録と削除
 ![ユーザーロジック](https://github.com/chie-hira/documents-management-API/assets/148871501/da98f568-1c3b-4cb3-a0ca-7dbd7c86ca63)
 
-### 保存期間の超過
+### 保存期間の判定方法
 ![保存期間ロジック](https://github.com/chie-hira/documents-management-API/assets/148871501/5c31e261-a362-45e0-aa88-68fad33c4839)
 
 ## ER図
