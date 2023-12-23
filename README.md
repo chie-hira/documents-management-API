@@ -1,5 +1,5 @@
 ## アプリの概要
-* ファイルごとに業務書類の保存期間(storage_term)、保存場所(storage_place)を管理できるアプリ
+* ファイルごとに業務書類の保存期間(storage_year)、保存場所(location)を管理できるアプリ
 * ファイルを作成したらを保存期間、機密分類(privacy_type)、保存場所を登録できる
 * ファイルが保存場所から持ち出されている場合、持ち出しているユーザー(borrower_id)を確認できる
 * 保存期間を超過したファイルが処分されていない場合、メール通知される
@@ -42,15 +42,10 @@
 
 ## 機能のロジック
 ### ユーザー登録と削除
-![ユーザーロジック](https://github.com/chie-hira/documents-management-API/assets/148871501/da98f568-1c3b-4cb3-a0ca-7dbd7c86ca63)
+![ユーザーロジック](https://github.com/chie-hira/files-management-API/assets/148871501/e430083e-4b30-47e1-ba58-af231258a8f9)
 
 ### 保存期間の判定方法
-![保存期間ロジック](https://github.com/chie-hira/documents-management-API/assets/148871501/5c31e261-a362-45e0-aa88-68fad33c4839)
+![保存期間ロジック](https://github.com/chie-hira/files-management-API/assets/148871501/58e03720-4e11-4319-994f-33c0b2a0976c)
 
 ## ER図
-![ER](https://github.com/chie-hira/files-management-API/assets/148871501/455f9659-78d5-4b73-abb0-e11eaf303fec)
-
-
-
-
-
+![ER](https://github.com/chie-hira/files-management-API/assets/148871501/6229b8c8-afd0-4a35-9a84-a9f233da2c26)
