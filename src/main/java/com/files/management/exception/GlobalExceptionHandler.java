@@ -14,6 +14,18 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(DuplicateLocationException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateLocationException(
+            DuplicateLocationException e, HttpServletRequest request) {
+        Map<String, String> body = Map.of(
+                "timestamp", ZonedDateTime.now().toString(),
+                "status", String.valueOf(HttpStatus.UNPROCESSABLE_ENTITY.value()),
+                "error", HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
+                "message", e.getMessage(),
+                "path", request.getRequestURI());
+        return new ResponseEntity<>(body, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e, HttpServletRequest request
