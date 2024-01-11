@@ -14,15 +14,15 @@ public class Location {
     @Column(name = "location")
     private String location;
     @Column(name = "shelf_number")
-    private int shelfNumber;
+    private String shelfNumber;
 
-    public Location(int id, String location, int shelfNumber) {
+    public Location(int id, String location, String shelfNumber) {
         this.id = id;
         this.location = location;
         this.shelfNumber = shelfNumber;
     }
 
-    public Location(String location, int shelfNumber) {
+    public Location(String location, String shelfNumber) {
         this.location = location;
         this.shelfNumber = shelfNumber;
     }
@@ -35,7 +35,7 @@ public class Location {
         return location;
     }
 
-    public int getShelfNumber() {
+    public String getShelfNumber() {
         return shelfNumber;
     }
 }

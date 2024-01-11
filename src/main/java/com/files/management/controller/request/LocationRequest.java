@@ -6,9 +6,9 @@ import jakarta.validation.constraints.Positive;
 public class LocationRequest {
     @NotBlank(message ="location is required")
     private String location;
-    @Positive(message = "shelfNumber is required")
-    private int shelfNumber;
-    public LocationRequest(String location, int shelfNumber) {
+    @NotBlank(message ="location is required")
+    private String shelfNumber;
+    public LocationRequest(String location, String shelfNumber) {
         this.location = location;
         this.shelfNumber = shelfNumber;
     }
@@ -16,7 +16,7 @@ public class LocationRequest {
     public String getLocation(){
         return location;
     }
-    public int getShelfNumber(){
+    public String getShelfNumber(){
         return shelfNumber;
     }
 }

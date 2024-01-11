@@ -15,7 +15,7 @@ public class LocationService {
         this.locationMapper = locationMapper;
     }
 
-    public Location insert(String locationName, int shelfNumber){
+    public Location insert(String locationName, String shelfNumber){
         // 複合ユニークバリデーション
         if (locationMapper.isMaterialUnique(locationName, shelfNumber)) {
             throw new DuplicateLocationException("Location with location:" + locationName
