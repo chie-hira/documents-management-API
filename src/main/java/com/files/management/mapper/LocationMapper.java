@@ -15,4 +15,7 @@ public interface LocationMapper {
 
     @Select("SELECT COUNT(*) FROM locations WHERE location = #{locationName} AND shelf_number = #{shelfNumber}")
     boolean isMaterialUnique(@Param("locationName") String locationName, @Param("shelfNumber") String shelfNumber);
+
+    @Select("SELECT COUNT(*) FROM locations")
+    int getCount();
 }
