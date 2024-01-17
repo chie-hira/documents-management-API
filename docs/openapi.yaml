@@ -1,0 +1,1135 @@
+openapi: "3.0.3"
+info:
+  title: Files Management API
+  description: |-
+    ファイル管理アプリのAPI仕様書です。
+  version: 1.0.11
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: users
+    description: ユーザー情報に関する操作
+  - name: file_categories
+    description: ファイル分類に関する操作
+  - name: locations
+    description: 保存場所に関する操作
+  - name: files
+    description: ファイルに関する操作
+paths:
+  /users/create:
+    post:
+      tags:
+        - users
+      summary: ユーザー情報の新規登録
+      description: ユーザーを新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBadRequest'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+  /users/{userId}:
+    patch:
+      tags:
+        - users
+      summary: ユーザー情報の更新
+      description: 指定したIDのユーザー情報を更新する
+      parameters:
+        - name: userId
+          in: path
+          description: 更新したいユーザーのID
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedUser'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+    delete:
+      tags:
+        - users
+      summary: ユーザー情報の削除
+      description: 指定したIDのユーザー情報を削除する
+      parameters:
+        - name: userId
+          in: path
+          description: 削除したいユーザーのID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedUser'
+        "404":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        "412":
+          description: Precondition Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteUserBadRequest'
+  /file_categories/create:
+    post:
+      tags:
+        - file_categories
+      summary: ファイル分類の新規登録
+      description: ファイル分類を新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFileCategoryRequest'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedFileCategory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileCategoryBadRequest'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+  /file_categories/{fileCategoryId}:
+    patch:
+      tags:
+        - file_categories
+      summary: ファイル分類の更新
+      description: 指定したIDのファイル分類を更新する
+      parameters:
+        - name: fileCategoryId
+          in: path
+          description: 更新したいファイル分類のID
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFileCategoryRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedFileCategory'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileCategoryBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+    delete:
+      tags:
+        - file_categories
+      summary: ファイル分類の削除
+      description: 指定したIDのファイル分類を削除する
+      parameters:
+        - name: fileCategoryId
+          in: path
+          description: 削除したいファイル分類のID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedFileCategory'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+  /locations/create:
+    post:
+      tags:
+        - locations
+      summary: 保存場所の新規登録
+      description: 保存場所を新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLocationRequest'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedLocation'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationBadRequest'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+  /locations/{locationId}:
+    patch:
+      tags:
+        - locations
+      summary: 保存場所の更新
+      description: 指定したIDの保存場所を更新する
+      parameters:
+        - name: locationId
+          in: path
+          description: 更新したい保存場所のID
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLocationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedLocation'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+    delete:
+      tags:
+        - locations
+      summary: 保存場所の削除
+      description: 指定したIDの保存場所を削除する
+      parameters:
+        - name: locationId
+          in: path
+          description: 削除したい保存場所のID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedLocation'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+  /files:
+    get:
+      tags:
+        - files
+      summary: ファイル情報の取得
+      description: クエリパラメータで入力された条件に合致するファイル情報を取得する。条件を入力しない場合は全てのファイル情報を取得する。
+      parameters:
+        - name: fileName
+          in: query
+          description: ファイル名が一致するファイルが検索される
+          required: false
+          schema:
+            type: string
+          example: 庶務資料
+        - name: location
+          in: query
+          description: 入力した保存場所に保存されているファイルが検索される
+          required: false
+          schema:
+            type: string
+          example: 書庫1
+        - name: createYear
+          in: query
+          description: 入力した年に作成されたファイルが検索される
+          required: false
+          schema:
+            type: int
+          example: 2023
+        - name: expirationYear
+          in: query
+          description: 入力した年に保存期限を迎えるファイルが検索される
+          required: false
+          schema:
+            type: int
+          example: 2023
+        - name: overdue
+          in: query
+          description: 保管期間を超過したファイルが検索される
+          required: false
+          schema:
+            type: string
+          example: on
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFiles'
+  /files/create:
+    post:
+      tags:
+        - files
+      summary: ファイルの新規登録
+      description: ファイルを新たに登録する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFileRequest'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedFile'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileBadRequest'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntity'
+  /files/{fileId}:
+    get:
+      tags:
+        - files
+      summary: 指定したIDのファイル情報取得
+      description: 指定したIDのファイル情報を取得する
+      parameters:
+        - name: fileId
+          in: path
+          description: 取得したいファイルのID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFile'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    patch:
+      tags:
+        - files
+      summary: ファイル情報の更新
+      description: 指定したIDのファイル情報を更新する
+      parameters:
+        - name: fileId
+          in: path
+          description: 更新したいファイル情報のID
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFileRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedFile'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+    delete:
+      tags:
+        - files
+      summary: ファイル情報の削除
+      description: 指定したIDのファイル情報を削除する
+      parameters:
+        - name: fileId
+          in: path
+          description: 削除したいファイル情報のID
+          required: true
+          schema:
+            type: int
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedFile'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /files/{fileId}/storage/{locationId}:
+    patch:
+      tags:
+        - files
+      summary: ファイルの保存
+      description: 指定したIDのファイル情報に保存場所を登録、変更する
+      parameters:
+        - name: fileId
+          in: path
+          description: 保存したファイルのID　
+          required: true
+          schema:
+          type: int
+          example: 1
+        - name: locationId
+          in: path
+          description: ファイルを保存する保存場所のID　
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageFileRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoragedFile'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageFileBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /files/{fileId}/brrow:
+    patch:
+      tags:
+        - files
+      summary: ファイルの持出登録
+      description: 指定したIDのファイル情報にファイルを持出したユーザーを登録する
+      parameters:
+        - name: fileId
+          in: path
+          description: ファイルのID　
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowedFile'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowFileBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /files/{fileId}/return:
+    patch:
+      tags:
+        - files
+      summary: ファイルの返却登録
+      description: 指定したIDのファイル情報から持出したユーザー情報を削除する
+      parameters:
+        - name: fileId
+          in: path
+          description: 返却するファイルのID　
+          required: true
+          schema:
+            type: int
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnedFile'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnFileBadRequest'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          example: 新太郎
+        email:
+          type: string
+          nullable: false
+          example: new@mail.com
+        password:
+          type: string
+          nullable: false
+          example: password
+        is_admin:
+          type: int
+          nullable: false
+          example: 0
+    UpdateUserRequest:
+      type: object
+      properties:
+        id:
+          type: int
+          nullable: false
+          example: 1
+        name:
+          type: string
+          nullable: false
+          example: 更太郎
+        email:
+          type: string
+          nullable: false
+          example: new@mail.com
+        password:
+          type: string
+          nullable: false
+          example: password
+        is_admin:
+          type: string
+          nullable: false
+          example: 0
+    CreatedUser:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 新規ユーザーを登録しました
+    UpdatedUser:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ユーザー情報を更新しました
+    DeletedUser:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ユーザー情報を削除しました
+    UserBadRequest:
+      description: ユーザー情報に関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: name,email,password,is_adminは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    DeleteUserBadRequest:
+      description: ユーザー情報削除に関するリクエストボディが削除条件と不一致である場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 412
+        error:
+          type: string
+          example: Precondition Failed
+        message:
+          type: string
+          example: 管理者ユーザーが不在となるため削除できません。
+        path:
+          type: string
+          example: 指定したパス
+    CreateFileCategoryRequest:
+      type: object
+      properties:
+        privacyType:
+          type: string
+          nullable: false
+          example: 公開
+        storageYear:
+          type: int
+          nullable: false
+          example: 5
+    UpdateFileCategoryRequest:
+      type: object
+      properties:
+        id:
+          type: int
+          nullable: false
+          example: 1
+        privacyType:
+          type: string
+          nullable: false
+          example: 取扱注意
+        storageYear:
+          type: int
+          nullable: false
+          example: 5
+    CreatedFileCategory:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイル分類を登録しました
+    UpdatedFileCategory:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイル分類を更新しました
+    DeletedFileCategory:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイル分類を削除しました
+    FileCategoryBadRequest:
+      description: ファイル分類に関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: privacyType,storageYearは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    CreateLocationRequest:
+      type: object
+      properties:
+        location:
+          type: string
+          nullable: false
+          example: 書庫
+        shelfNumber:
+          type: int
+          nullable: false
+          example: 1
+    UpdateLocationRequest:
+      type: object
+      properties:
+        id:
+          type: int
+          nullable: false
+          example: 1
+        location:
+          type: string
+          nullable: false
+          example: 書庫
+        shelfNumber:
+          type: int
+          nullable: false
+          example: 2
+    CreatedLocation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 保存場所情報を登録しました
+    UpdatedLocation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 保存場所情報を更新しました
+    DeletedLocation:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 保存場所情報を削除しました
+    LocationBadRequest:
+      description: 保存場所情報に関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: location,shelfNumberは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    GetFiles:
+      type: array
+      items:
+        type: object
+        properties:
+          Id:
+            type: int
+            example: 1
+          fileName:
+            type: string
+            example: 令和5年度庶務資料
+          borrowerName:
+            type: string
+            example: null
+          privacyType:
+            type: string
+            example: 公開
+          　storageYear:
+            type: int
+            example: 5
+          location:
+            type: string
+            example: 書庫1
+          shelfNumber:
+            type: int
+            example: 2
+          createYear:
+            type: string
+            example: 2023-05-12
+          expirationYear:
+            type: string
+            example: 2029-03-31
+    GetFile:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: 令和5年度庶務資料
+        borrowerName:
+          type: string
+          example: null
+        privacyType:
+          type: string
+          example: 公開
+        　storageYear:
+          type: int
+          example: 5
+        location:
+          type: string
+          example: 書庫1
+        shelfNumber:
+          type: int
+          example: 2
+        createYear:
+          type: string
+          example: 2023-05-12
+        expirationYear:
+          type: string
+          example: 2029-03-31
+    CreateFileRequest:
+      type: object
+      properties:
+        fileName:
+          type: string
+          nullable: false
+          example: 令和5年度庶務資料
+        fileCategoryId:
+          type: int
+          nullable: false
+          example: 1
+    UpdateFileRequest:
+      type: object
+      properties:
+        id:
+          type: int
+          nullable: false
+          example: 1
+        fileName:
+          type: string
+          nullable: false
+          example: 総務資料
+        fileCategoryId:
+          type: int
+          nullable: false
+          example: 1
+    CreatedFile:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイル情報を登録しました
+    UpdatedFile:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイル情報を更新しました
+    DeletedFile:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイル情報を削除しました
+    FileBadRequest:
+      description: ファイル情報に関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: fileName,fileCategoryIdは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    StorageFileRequest:
+      type: object
+      properties:
+        fileId:
+          type: int
+          nullable: false
+          example: 1
+        locationId:
+          type: int
+          nullable: false
+          example: 1
+    StoragedFile:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイルを保存場所に保存しました
+    FileRequest:
+      type: object
+      properties:
+        fileId:
+          type: int
+          nullable: false
+          example: 1
+    BorrowedFile:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイルを持出しました
+    ReturnFileBadRequest:
+      description: ファイル返却に関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: fileIdは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    ReturnedFile:
+      type: object
+      properties:
+        message:
+          type: string
+          example: ファイルを返却しました
+    BorrowFileBadRequest:
+      description: ファイル持出しに関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: fileIdは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    StorageFileBadRequest:
+      description: ファイルの保存に関するリクエストボディに不備がある場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: fileId,locationIdは必須項目です。
+        path:
+          type: string
+          example: 指定したパス
+    NotFound:
+      description: 指定したリソースが存在しない場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: Not Found
+        path:
+          type: string
+          example: 指定したパス
+    Conflict:
+      description: 指定したリソースに外部制約が存在する場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 409
+        error:
+          type: string
+          example: Conflict
+        message:
+          type: string
+          example: 関連するデータが存在するため、この操作は実行できません。
+        path:
+          type: string
+          example: 指定したパス
+    UnprocessableEntity:
+      description: 指定したリソースにユニーク制約が存在する場合のレスポンス
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          example: 422
+        error:
+          type: string
+          example: Unprocessable Entity
+        message:
+          type: string
+          example: 指定された内容は既に存在するため、この操作は実行できません。
+        path:
+          type: string
+          example: 指定したパス
