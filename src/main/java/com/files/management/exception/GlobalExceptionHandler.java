@@ -19,11 +19,11 @@ public class GlobalExceptionHandler {
             DuplicateLocationException e, HttpServletRequest request) {
         Map<String, String> body = Map.of(
                 "timestamp", ZonedDateTime.now().toString(),
-                "status", String.valueOf(HttpStatus.UNPROCESSABLE_ENTITY.value()),
-                "error", HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
+                "status", String.valueOf(HttpStatus.METHOD_NOT_ALLOWED.value()),
+                "error", HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
                 "message", e.getMessage(),
                 "path", request.getRequestURI());
-        return new ResponseEntity<>(body, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(body, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

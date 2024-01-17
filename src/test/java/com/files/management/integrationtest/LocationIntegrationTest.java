@@ -126,16 +126,16 @@ class LocationIntegrationTest {
 		String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
-				.andExpect(status().isUnprocessableEntity())
+				.andExpect(status().isMethodNotAllowed())
 				.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
 		JSONAssert.assertEquals("""
 				{
 				  "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
 				  "message": "Location with location:TestLocation and shelfNumber:TestShelfNumber already exists",
-				  "status": "422",
+				  "status": "405",
 				  "path": "/locations",
-				  "error": "Unprocessable Entity"
+				  "error": "Method Not Allowed"
 				}
 				""", response, new CustomComparator(JSONCompareMode.STRICT,
 				new Customization("timestamp", ((o1, o2) -> true))));
