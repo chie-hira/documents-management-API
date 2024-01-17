@@ -49,6 +49,9 @@ https://www.figma.com/community/file/1324311353602501525
 ### 保存期間の判定方法
 ![保存期間ロジック](https://github.com/chie-hira/files-management-API/assets/148871501/58e03720-4e11-4319-994f-33c0b2a0976c)
 
+## API仕様書
+https://chie-hira.github.io/files-management-API/dist/index.html
+
 ## ER図
 ![ER](https://github.com/chie-hira/files-management-API/assets/148871501/fb8e9450-4a8d-4bee-a69b-9d79aaa1b80f)
 
