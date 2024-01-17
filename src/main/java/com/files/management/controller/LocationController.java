@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,7 +25,8 @@ public class LocationController {
     public ResponseEntity<LocationResponse> insert(@RequestBody @Valid LocationRequest locationRequest, UriComponentsBuilder uriComponentsBuilder){
         Location location = locationService.insert(locationRequest.getLocation(), locationRequest.getShelfNumber());
         URI uriLocation = uriComponentsBuilder.path("locations/{id}").buildAndExpand(location.getId()).toUri();
-        LocationResponse body = new LocationResponse("保存場所情報を登録しました");
+        int newId = location.getId();
+        LocationResponse body = new LocationResponse("保存場所情報を登録しました", newId, locationRequest.getLocation(), locationRequest.getShelfNumber());
         return ResponseEntity.created(uriLocation).body(body);
     }
 }
