@@ -635,6 +635,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFound'
+
 components:
   schemas:
     CreateUserRequest:
