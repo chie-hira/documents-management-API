@@ -1,22 +1,25 @@
 package com.files.management.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 
 public class LocationRequest {
-    @NotBlank(message ="location is required")
-    private String location;
-    @NotBlank(message ="location is required")
-    private String shelfNumber;
-    public LocationRequest(String location, String shelfNumber) {
-        this.location = location;
-        this.shelfNumber = shelfNumber;
-    }
 
-    public String getLocation(){
-        return location;
-    }
-    public String getShelfNumber(){
-        return shelfNumber;
-    }
+  @NotBlank(message = "location is required")
+  private String location;
+  
+  @NotBlank(message = "location is required")
+  private String shelfNumber;
+
+  public LocationRequest(String location, String shelfNumber) {
+    this.location = location;
+    this.shelfNumber = shelfNumber;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public String getShelfNumber() {
+    return shelfNumber;
+  }
 }
