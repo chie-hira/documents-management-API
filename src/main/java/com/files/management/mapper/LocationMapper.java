@@ -1,6 +1,7 @@
 package com.files.management.mapper;
 
 import com.files.management.entity.Location;
+import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -20,7 +21,10 @@ public interface LocationMapper {
   void update(Location location);
 
   @Select("SELECT * FROM locations WHERE id = #{id}")
-  Optional<Location> findById(int locationId);
+  Optional<Location> findById(int id);
+
+  @Select("SELECT * FROM locations")
+  List<Location> findAll();
 
   @Select("SELECT COUNT(*) FROM locations WHERE location = #{locationName} AND shelf_number = #{shelfNumber}")
   boolean isMaterialUnique(@Param("locationName") String locationName,
