@@ -30,8 +30,8 @@ public class LocationService {
     return location;
   }
 
-  public Location update(int locationId, String locationName, String shelfNumber) {
-    Optional<Location> location = this.locationMapper.findById(locationId);
+  public Location update(int id, String locationName, String shelfNumber) {
+    Optional<Location> location = this.locationMapper.findById(id);
     location.orElseThrow(
         () -> new LocationNotFoundException("location not found", HttpStatus.NOT_FOUND));
 
@@ -39,7 +39,7 @@ public class LocationService {
       throw new DuplicateLocationException("Location with location:" + locationName
           + " and shelfNumber:" + shelfNumber + " already exists");
     }
-    Location updateLocation = new Location(locationId, locationName, shelfNumber);
+    Location updateLocation = new Location(id, locationName, shelfNumber);
     locationMapper.update(updateLocation);
     return updateLocation;
   }

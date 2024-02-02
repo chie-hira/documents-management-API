@@ -52,7 +52,7 @@ public class LocationController {
         .toUri();
     LocationResponse body = new LocationResponse(
         "保存場所情報を更新しました",
-        locationRequest.getId(),
+        locationId,
         locationRequest.getLocation(),
         locationRequest.getShelfNumber());
     return ResponseEntity.ok().location(uriLocation).body(body);
