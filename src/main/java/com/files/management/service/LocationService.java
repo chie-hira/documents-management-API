@@ -4,6 +4,7 @@ import com.files.management.entity.Location;
 import com.files.management.exception.DuplicateLocationException;
 import com.files.management.exception.LocationNotFoundException;
 import com.files.management.mapper.LocationMapper;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class LocationService {
           + " and shelfNumber:" + shelfNumber + " already exists");
     }
     Location updateLocation = new Location(id, locationName, shelfNumber);
+    updateLocation.setUpdatedAt(LocalDateTime.now());
     locationMapper.update(updateLocation);
     return updateLocation;
   }
