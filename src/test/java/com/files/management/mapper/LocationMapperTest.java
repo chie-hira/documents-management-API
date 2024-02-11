@@ -6,6 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.files.management.entity.Location;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -54,10 +56,12 @@ class LocationMapperTest {
     locationMapper.update(location);
 
     Optional<Location> afterUpdate = locationMapper.findById(1);
+    LocalDateTime updateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     assertThat(afterUpdate.get().getId()).isEqualTo(1);
     assertThat(afterUpdate.get().getLocation()).isEqualTo("事務室");
     assertThat(afterUpdate.get().getShelfNumber()).isEqualTo("棚-4");
+    assertThat(afterUpdate.get().getUpdatedAt()).isEqualTo(updateTime);
   }
 
   @Test
