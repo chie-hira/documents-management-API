@@ -1,21 +1,9 @@
 package com.files.management.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-
-@Entity
-@Table(name = "locations", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"location", "shelf_number"})
-})
 public class Location {
 
-  @Column(name = "id")
   private int id;
-  @Column(name = "location")
   private String location;
-  @Column(name = "shelf_number")
   private String shelfNumber;
 
   public Location() {
