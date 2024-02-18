@@ -1,8 +1,14 @@
 package com.files.management.integrationtest;
 
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.files.management.entity.Location;
 import com.files.management.mapper.LocationMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -18,126 +24,162 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @DBRider
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class LocationIntegrationTest {
 
-	@Autowired
-	MockMvc mockMvc;
+  @Autowired
+  MockMvc mockMvc;
 
-	@MockBean
-	private LocationMapper locationMapper;
+  @MockBean
+  private LocationMapper locationMapper;
 
-	@Test
-	@DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
-	@Transactional
-	void 保存場所を登録できること() throws Exception {
-		String locationName = "TestLocation";
-		String shelfNumber = "TestShelfNumber";
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 保存場所を登録できること() throws Exception {
+    String locationName = "TestLocation";
+    String shelfNumber = "TestShelfNumber";
 
-		when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(false);
+    when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(false);
 
-		String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
-				.andExpect(status().isCreated())
-				.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
+        .andExpect(status().isCreated())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-		JSONAssert.assertEquals("""
-				  {
-				    "message": "保存場所情報を登録しました",
-				    "id": 6,
-				    "location": "TestLocation",
-				    "shelfNumber": "TestShelfNumber"
-				  }
-				  """, response, new CustomComparator(JSONCompareMode.STRICT,
-				new Customization("id", ((o1, o2) -> true))
-		));
+    JSONAssert.assertEquals("""
+        {
+          "message": "保存場所情報を登録しました",
+          "id": 6,
+          "location": "TestLocation",
+          "shelfNumber": "TestShelfNumber"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("id", ((o1, o2) -> true))
+    ));
 
-	}
+  }
 
-	@Test
-	@DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
-	@Transactional
-	void 保存場所が空で保存場所を作成しようとしたとき例外が投げられること() throws Exception {
-		String locationName = "";
-		String shelfNumber = "TestShelfNumber";
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 保存場所が空で保存場所を作成しようとしたとき例外が投げられること() throws Exception {
+    String locationName = "";
+    String shelfNumber = "TestShelfNumber";
 
-		String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
-				.andExpect(status().isBadRequest())
-				.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
+        .andExpect(status().isBadRequest())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-		JSONAssert.assertEquals("""
-				{
-				  "status": "400",
-				  "message": "location: location is required",
-				  "timestamp": "2024-01-17T22:47:08.854416+09:00[Asia/Tokyo]",
-				  "error": "Bad Request",
-				  "path": "/locations"
-				}
-				""", response, new CustomComparator(JSONCompareMode.STRICT,
-				new Customization("timestamp", ((o1, o2) -> true))));
-	}
+    JSONAssert.assertEquals("""
+        {
+          "status": "400",
+          "message": "location: location is required",
+          "timestamp": "2024-01-17T22:47:08.854416+09:00[Asia/Tokyo]",
+          "error": "Bad Request",
+          "path": "/locations"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
 
-	@Test
-	@DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
-	@Transactional
-	void 棚番号が空で保存場所を作成しようとしたとき例外が投げられること() throws Exception {
-		// locationが空の場合のテスト
-		String locationName = "TestLocation";
-		String shelfNumber = "";
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 棚番号が空で保存場所を作成しようとしたとき例外が投げられること() throws Exception {
+    // locationが空の場合のテスト
+    String locationName = "TestLocation";
+    String shelfNumber = "";
 
-		String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
-				.andExpect(status().isBadRequest())
-				.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
+        .andExpect(status().isBadRequest())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-		JSONAssert.assertEquals("""
-				{
-				  "status": "400",
-				  "message": "shelfNumber: location is required",
-				  "timestamp": "2024-01-17T22:47:08.854416+09:00[Asia/Tokyo]",
-				  "error": "Bad Request",
-				  "path": "/locations"
-				}
-				""", response, new CustomComparator(JSONCompareMode.STRICT,
-				new Customization("timestamp", ((o1, o2) -> true))));
-	}
+    JSONAssert.assertEquals("""
+        {
+          "status": "400",
+          "message": "shelfNumber: location is required",
+          "timestamp": "2024-01-17T22:47:08.854416+09:00[Asia/Tokyo]",
+          "error": "Bad Request",
+          "path": "/locations"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
 
-	@Test
-	@DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
-	@Transactional
-	void 重複する保存場所を登録しようとしたとき例外が投げられること() throws Exception {
-		String locationName = "TestLocation";
-		String shelfNumber = "TestShelfNumber";
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 重複する保存場所を登録しようとしたとき例外が投げられること() throws Exception {
+    String locationName = "TestLocation";
+    String shelfNumber = "TestShelfNumber";
 
-		when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(true);
+    when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(true);
 
-		String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
-				.andExpect(status().isMethodNotAllowed())
-				.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"location\":\"" + locationName + "\",\"shelfNumber\":\"" + shelfNumber + "\"}"))
+        .andExpect(status().isMethodNotAllowed())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-		JSONAssert.assertEquals("""
-				{
-				  "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
-				  "message": "Location with location:TestLocation and shelfNumber:TestShelfNumber already exists",
-				  "status": "405",
-				  "path": "/locations",
-				  "error": "Method Not Allowed"
-				}
-				""", response, new CustomComparator(JSONCompareMode.STRICT,
-				new Customization("timestamp", ((o1, o2) -> true))));
-	}
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
+          "message": "Location with location:TestLocation and shelfNumber:TestShelfNumber already exists",
+          "status": "405",
+          "path": "/locations",
+          "error": "Method Not Allowed"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 保存場所を更新できること() throws Exception {
+    // テストに必要なデータを準備します
+    int id = 1;
+    String locationName = "新しい場所";
+    String shelfNumber = "新しい棚";
+
+    // モックの設定
+    when(locationMapper.findById(id)).thenReturn(
+        Optional.of(new Location(id, "既存場所", "既存棚")));
+    when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(false);
+
+    // 更新リクエストの作成
+    String requestBody = """
+        {
+          "id": 1,
+          "location": "新しい場所",
+          "shelfNumber": "新しい棚"
+        }
+        """;
+
+    String response = mockMvc.perform(MockMvcRequestBuilders.put("/locations/{id}", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+        {
+          "message": "保存場所情報を更新しました",
+          "id": 1,
+          "location": "新しい場所",
+          "shelfNumber": "新しい棚"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("id", ((o1, o2) -> true))
+    ));
+  }
 }
