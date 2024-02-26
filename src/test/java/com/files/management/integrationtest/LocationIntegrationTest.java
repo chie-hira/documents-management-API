@@ -44,7 +44,7 @@ class LocationIntegrationTest {
     String shelfNumber = "新しい棚";
 
     // モック設定
-    when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(false);
+    when(locationMapper.isNotLocationUnique(locationName, shelfNumber)).thenReturn(false);
 
     // リクエスト作成
     String requestBody = """
@@ -61,7 +61,7 @@ class LocationIntegrationTest {
         .andExpect(status().isCreated())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-    // 検証
+    // レスポンスの検証
     JSONAssert.assertEquals("""
         {
           "message": "保存場所情報を登録しました",
@@ -109,7 +109,6 @@ class LocationIntegrationTest {
         new Customization("timestamp", ((o1, o2) -> true))));
   }
 
-
   @Test
   @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
   @Transactional
@@ -132,7 +131,7 @@ class LocationIntegrationTest {
         .andExpect(status().isBadRequest())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-    // 検証
+    // レスポンスの検証
     JSONAssert.assertEquals("""
         {
           "status": "400",
@@ -160,8 +159,8 @@ class LocationIntegrationTest {
         }
         """;
 
-    // モック設定(重複する)
-    when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(true);
+    // モック設定
+    when(locationMapper.isNotLocationUnique(locationName, shelfNumber)).thenReturn(true);
 
     String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
             .contentType(MediaType.APPLICATION_JSON)
@@ -169,7 +168,7 @@ class LocationIntegrationTest {
         .andExpect(status().isMethodNotAllowed())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-    // 検証
+    // レスポンス検証
     JSONAssert.assertEquals("""
         {
           "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
@@ -183,17 +182,17 @@ class LocationIntegrationTest {
   }
 
   @Test
-  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @DataSet(value = "datasets/update_locations.yml, datasets/insert_files.yml")
   @Transactional
   void 保存場所を更新できること() throws Exception {
     int id = 1;
     String locationName = "新しい場所";
     String shelfNumber = "新しい棚";
 
-    // モック設定(findByIdと一意)
+    // モック設定
     when(locationMapper.findById(id)).thenReturn(
         Optional.of(new Location(id, "既存場所", "既存棚")));
-    when(locationMapper.isMaterialUnique(locationName, shelfNumber)).thenReturn(false);
+    when(locationMapper.isNotLocationUnique(locationName, shelfNumber)).thenReturn(false);
 
     // 更新リクエスト作成
     String requestBody = """
@@ -211,7 +210,7 @@ class LocationIntegrationTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-    // 検証
+    // レスポンス検証
     JSONAssert.assertEquals("""
         {
           "message": "保存場所情報を更新しました",
@@ -222,5 +221,120 @@ class LocationIntegrationTest {
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("id", ((o1, o2) -> true))
     ));
+  }
+
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 保存場所が空で保存場所を更新しようとしたとき例外が投げられること() throws Exception {
+    int id = 1;
+    String locationName = "";
+    String shelfNumber = "棚番";
+
+    // リクエスト作成
+    String requestBody = """
+        {
+          "id": 1,
+          "location": "",
+          "shelfNumber": "棚番"
+        }
+        """;
+
+    // 実行
+    String response = mockMvc.perform(MockMvcRequestBuilders.put("/locations/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    // レスポンスの検証
+    JSONAssert.assertEquals("""
+        {
+          "status": "400",
+          "message": "location: location is required",
+          "timestamp": "2024-01-17T22:47:08.854416+09:00[Asia/Tokyo]",
+          "error": "Bad Request",
+          "path": "/locations/1"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  @Test
+  @DataSet(value = "datasets/insert_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 棚番号が空で保存場所を更新しようとしたとき例外が投げられること() throws Exception {
+    int id = 1;
+    String locationName = "場所";
+    String shelfNumber = "";
+
+    // リクエスト作成
+    String requestBody = """
+        {
+          "id": 1,
+          "location": "場所",
+          "shelfNumber": ""
+        }
+        """;
+
+    // 実行
+    String response = mockMvc.perform(MockMvcRequestBuilders.put("/locations/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    // レスポンスの検証
+    JSONAssert.assertEquals("""
+        {
+          "status": "400",
+          "message": "shelfNumber: location is required",
+          "timestamp": "2024-01-17T22:47:08.854416+09:00[Asia/Tokyo]",
+          "error": "Bad Request",
+          "path": "/locations/1"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  @Test
+  @DataSet(value = "datasets/update_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 重複する保存場所に更新しようとしたとき例外が投げられること() throws Exception {
+    int id = 1;
+    String locationName = "場所";
+    String shelfNumber = "棚";
+
+    // リクエスト作成
+    String requestBody = """
+        {
+          "id": 1,
+          "location": "場所",
+          "shelfNumber": "棚"
+        }
+        """;
+
+    // モック設定
+    when(locationMapper.findById(id)).thenReturn(
+        Optional.of(new Location(id, "既存場所", "既存棚")));
+    when(locationMapper.isNotLocationUnique(locationName, shelfNumber)).thenReturn(true);
+
+    String response = mockMvc.perform(MockMvcRequestBuilders.put("/locations/{id}", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(status().isMethodNotAllowed())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    // レスポンス検証
+    JSONAssert.assertEquals("""
+        {
+          "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
+          "message": "Location with location:場所 and shelfNumber:棚 already exists",
+          "status": "405",
+          "path": "/locations/1",
+          "error": "Method Not Allowed"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))));
   }
 }
