@@ -11,3 +11,6 @@ locations:
   - id: 4
     location: "事務室"
     shelf_number: "棚-2"
+  - id: 5
+    location: "物置"
+    shelf_number: "スチール書庫-1"
