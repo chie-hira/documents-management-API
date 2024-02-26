@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(LocationNotFoundException.class)
-  public ResponseEntity<Map<String, String>> handleMaterialNotFoundException(
+  public ResponseEntity<Map<String, String>> handleLocationNotFoundException(
       LocationNotFoundException e, HttpServletRequest request) {
     Map<String, String> body = Map.of(
         "timestamp", ZonedDateTime.now().toString(),

@@ -23,7 +23,7 @@ public interface LocationMapper {
   Optional<Location> findById(int locationId);
 
   @Select("SELECT COUNT(*) FROM locations WHERE location = #{locationName} AND shelf_number = #{shelfNumber}")
-  boolean isMaterialUnique(@Param("locationName") String locationName,
+  boolean isNotLocationUnique(@Param("locationName") String locationName,
       @Param("shelfNumber") String shelfNumber);
 
   @Select("SELECT COUNT(*) FROM locations")
