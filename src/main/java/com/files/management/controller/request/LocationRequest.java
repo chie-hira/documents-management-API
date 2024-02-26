@@ -14,9 +14,6 @@ public class LocationRequest {
   @NotBlank(message = "location is required")
   private String shelfNumber;
 
-  public LocationRequest() {
-  }
-
   public LocationRequest(String location, String shelfNumber) {
     this.location = location;
     this.shelfNumber = shelfNumber;
