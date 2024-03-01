@@ -21,18 +21,16 @@ jobs:
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
+          #          microsoft と　temurin　で何が違う？
           #          distribution: microsoft
           distribution: temurin
           java-version: 17
 
       - name: Store reports
-        if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: reports
-          path: |
-            **/build/reports/
-            **/build/test-results/
+          name: test-reports
+          path: build/reports/tests/test
 
       # Gradleビルドを実行
       - name: Build with Gradle
