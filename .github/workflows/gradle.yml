@@ -1,18 +1,22 @@
-# ワークフローの名前。
 name: Build
 
-# どういったイベントが発生したときにワークフローを実行するかを指定。
 on:
-  # ここでは変更がpushされたときをイベントとして指定。
   - push
 
-# ワークフローが実行するジョブの一覧
 jobs:
-  # ビルドを行うジョブ
   build:
     # 最新のUbuntuでワークフローを実行
     runs-on: ubuntu-latest
-    # ジョブが行うステップの一覧
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: user
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       # ソースコードをGitからチェックアウト
       - uses: actions/checkout@v4
@@ -24,12 +28,21 @@ jobs:
         with:
           distribution: microsoft
           java-version: 17
+
       # Gradleビルドを実行
-      #      - uses: gradle/gradle-build-action@v2
-      #        with:
-      #          arguments: build
-      - name: Build with Gradle (without tests)
-        run: ./gradlew build -x test
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+#      - name: Build with Gradle (without tests)
+#        run: ./gradlew build -x test
+#
+#      - name: Run tests
+#        run: ./gradlew test
+
+
+
 
 #name: Java CI with Gradle
 #
