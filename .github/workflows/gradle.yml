@@ -26,11 +26,17 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      #      - name: Store reports
+      #        uses: actions/upload-artifact@v3
+      #        with:
+      #          name: test-reports
+      #          path: build/reports/tests/test
+
       - name: Store reports
-        uses: actions/upload-artifact@v3
+        uses: mikepenz/action-junit-report@v3
         with:
-          name: test-reports
-          path: build/reports/tests/test
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+          job_name: 'Test Report'
 
       # Gradleビルドを実行
       - name: Build with Gradle
