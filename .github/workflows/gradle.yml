@@ -32,11 +32,11 @@ jobs:
       #          name: test-reports
       #          path: build/reports/tests/test
 
-      - name: Store reports
-        uses: mikepenz/action-junit-report@v3
-        with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
-          job_name: 'Test Report'
+      #      - name: Store reports
+      #        uses: mikepenz/action-junit-report@v3
+      #        with:
+      #          report_paths: '**/build/test-results/test/TEST-*.xml'
+      #          job_name: 'Test Report'
 
       # Gradleビルドを実行
       - name: Build with Gradle
