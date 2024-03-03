@@ -26,11 +26,11 @@ jobs:
           distribution: temurin
           java-version: 17
 
-          # Gradleビルドを実行
-          - name: Build with Gradle
-            uses: gradle/gradle-build-action@v2
-            with:
-              arguments: build
+      # Gradleビルドを実行
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
 
 #      - name: Build with Gradle (without tests)
 #        run: ./gradlew build -x test
