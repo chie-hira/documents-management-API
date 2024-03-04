@@ -55,7 +55,6 @@ class LocationMapperTest {
     locationMapper.update(location);
 
     Optional<Location> afterUpdate = locationMapper.findById(1);
-//    LocalDateTime updateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     LocalDateTime updateTime = LocalDateTime.now(ZoneId.of("Asia/Tokyo"))
         .truncatedTo(ChronoUnit.SECONDS);
 
