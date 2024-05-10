@@ -337,4 +337,30 @@ class LocationIntegrationTest {
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
   }
+
+  @Test
+  @DataSet(value = "datasets/delete_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 保存場所を削除できること() throws Exception {
+    int id = 1;
+
+    // モック設定
+    when(locationMapper.findById(id)).thenReturn(
+        Optional.of(new Location(id, "既存場所", "既存棚")));
+
+    // 実行
+    String response = mockMvc.perform(MockMvcRequestBuilders.delete("/locations/{id}", id))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+    // レスポンス検証
+    JSONAssert.assertEquals("""
+        {
+          "message": "保存場所を削除しました",
+          "id": 1,
+          "location": "既存場所",
+          "shelfNumber": "既存棚"
+        }
+        """, response, new CustomComparator(JSONCompareMode.STRICT));
+  }
 }
