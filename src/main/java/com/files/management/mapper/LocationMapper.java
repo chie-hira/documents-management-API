@@ -2,6 +2,7 @@ package com.files.management.mapper;
 
 import com.files.management.entity.Location;
 import java.util.Optional;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
@@ -20,7 +21,7 @@ public interface LocationMapper {
   void update(Location location);
 
   @Select("SELECT * FROM locations WHERE id = #{id}")
-  Optional<Location> findById(int locationId);
+  Optional<Location> findById(int id);
 
   @Select("SELECT COUNT(*) FROM locations WHERE location = #{locationName} AND shelf_number = #{shelfNumber}")
   boolean isNotLocationUnique(@Param("locationName") String locationName,
@@ -28,4 +29,7 @@ public interface LocationMapper {
 
   @Select("SELECT COUNT(*) FROM locations")
   int getCount();
+
+  @Delete("DELETE FROM locations WHERE id = #{id}")
+  void delete(int id);
 }

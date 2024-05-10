@@ -7,6 +7,7 @@ import com.files.management.service.LocationService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,5 +57,24 @@ public class LocationController {
         locationRequest.getLocation(),
         locationRequest.getShelfNumber());
     return ResponseEntity.ok().location(uriLocation).body(body);
+  }
+
+  @DeleteMapping("/locations/{id}")
+  public ResponseEntity<LocationResponse> delete(
+      @PathVariable("id") int id
+  ) {
+    Location location = locationService.show(id);
+    String locationName = location.getLocation();
+    String shelfNumber = location.getShelfNumber();
+
+    locationService.delete(id);
+
+    LocationResponse body = new LocationResponse(
+        "保存場所を削除しました",
+        id,
+        locationName,
+        shelfNumber
+    );
+    return ResponseEntity.ok().body(body);
   }
 }

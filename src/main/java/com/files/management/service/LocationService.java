@@ -40,8 +40,21 @@ public class LocationService {
           + " and shelfNumber:" + shelfNumber + " already exists");
     }
     Location updateLocation = new Location(id, locationName, shelfNumber);
-//    updateLocation.setUpdatedAt(LocalDateTime.now());
     locationMapper.update(updateLocation);
     return updateLocation;
+  }
+
+  public void delete(int id) {
+    Optional<Location> location = this.locationMapper.findById(id);
+    location.orElseThrow(
+        () -> new LocationNotFoundException("location not found", HttpStatus.NOT_FOUND));
+    // Fileまわりを実装したらfilesにlocationがあるときは削除できないようにする
+    locationMapper.delete(id);
+  }
+
+  public Location show(int id) {
+    return locationMapper.findById(id)
+        .orElseThrow(
+            () -> new LocationNotFoundException("location not found", HttpStatus.NOT_FOUND));
   }
 }
