@@ -63,11 +63,7 @@ public class LocationController {
   public ResponseEntity<Void> delete(
       @PathVariable("id") int id
   ) {
-    Location location = locationService.show(id);
-    if (location == null) {
-      return ResponseEntity.notFound().build();
-    }
-
+    locationService.show(id);
     locationService.delete(id);
     return ResponseEntity.noContent().build();
   }
