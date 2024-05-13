@@ -1,5 +1,7 @@
 package com.files.management.integrationtest;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -349,18 +351,10 @@ class LocationIntegrationTest {
         Optional.of(new Location(id, "既存場所", "既存棚")));
 
     // 実行
-    String response = mockMvc.perform(MockMvcRequestBuilders.delete("/locations/{id}", id))
-        .andExpect(status().isOk())
-        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+    mockMvc.perform(MockMvcRequestBuilders.delete("/locations/{id}", id))
+        .andExpect(status().isNoContent()); // HTTPステータスコードのみを検証する
 
-    // レスポンス検証
-    JSONAssert.assertEquals("""
-        {
-          "message": "保存場所を削除しました",
-          "id": 1,
-          "location": "既存場所",
-          "shelfNumber": "既存棚"
-        }
-        """, response, new CustomComparator(JSONCompareMode.STRICT));
+    // 検証
+    verify(locationMapper, times(1)).delete(id);
   }
 }

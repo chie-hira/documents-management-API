@@ -60,21 +60,15 @@ public class LocationController {
   }
 
   @DeleteMapping("/locations/{id}")
-  public ResponseEntity<LocationResponse> delete(
+  public ResponseEntity<Void> delete(
       @PathVariable("id") int id
   ) {
     Location location = locationService.show(id);
-    String locationName = location.getLocation();
-    String shelfNumber = location.getShelfNumber();
+    if (location == null) {
+      return ResponseEntity.notFound().build();
+    }
 
     locationService.delete(id);
-
-    LocationResponse body = new LocationResponse(
-        "保存場所を削除しました",
-        id,
-        locationName,
-        shelfNumber
-    );
-    return ResponseEntity.ok().body(body);
+    return ResponseEntity.noContent().build();
   }
 }
