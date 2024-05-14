@@ -45,10 +45,6 @@ public class LocationService {
   }
 
   public void delete(int id) {
-    locationMapper.findById(id)
-        .orElseThrow(
-            () -> new LocationNotFoundException("location not found", HttpStatus.NOT_FOUND));
-
     Optional<Location> location = this.locationMapper.findById(id);
     location.orElseThrow(
         () -> new LocationNotFoundException("location not found", HttpStatus.NOT_FOUND));
