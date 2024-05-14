@@ -63,7 +63,6 @@ public class LocationController {
   public ResponseEntity<Void> delete(
       @PathVariable("id") int id
   ) {
-    locationService.show(id);
     locationService.delete(id);
     return ResponseEntity.noContent().build();
   }
