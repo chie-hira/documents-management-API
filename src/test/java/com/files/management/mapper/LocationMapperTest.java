@@ -99,4 +99,16 @@ class LocationMapperTest {
   void 指定したIDが見つからないとき空のOptionalが返されること() {
     assertThat(locationMapper.findById(99)).isEmpty();
   }
+
+  @Test
+  @DataSet(value = "datasets/delete_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 新しい保存場所を削除できること() {
+    int initialRowCount = locationMapper.getCount();
+    int deleteId = 4; // id:1,2はfilesと紐づいているので削除できない
+    // files実装後に「Cannot delete or update a parent row: a foreign key constraint fails」対応
+    locationMapper.delete(deleteId);
+    int finalRowCount = locationMapper.getCount();
+    assertThat(initialRowCount).isNotEqualTo(finalRowCount);
+  }
 }

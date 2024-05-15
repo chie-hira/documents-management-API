@@ -1,5 +1,7 @@
 package com.files.management.integrationtest;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -336,5 +338,23 @@ class LocationIntegrationTest {
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  @Test
+  @DataSet(value = "datasets/delete_locations.yml, datasets/insert_files.yml")
+  @Transactional
+  void 保存場所を削除できること() throws Exception {
+    int id = 1;
+
+    // モック設定
+    when(locationMapper.findById(id)).thenReturn(
+        Optional.of(new Location(id, "既存場所", "既存棚")));
+
+    // 実行
+    mockMvc.perform(MockMvcRequestBuilders.delete("/locations/{id}", id))
+        .andExpect(status().isNoContent()); // HTTPステータスコードのみを検証する
+
+    // 検証
+    verify(locationMapper, times(1)).delete(id);
   }
 }

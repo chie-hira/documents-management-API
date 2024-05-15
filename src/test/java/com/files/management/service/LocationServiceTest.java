@@ -3,6 +3,7 @@ package com.files.management.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import com.files.management.entity.Location;
 import com.files.management.exception.DuplicateLocationException;
+import com.files.management.exception.LocationNotFoundException;
 import com.files.management.mapper.LocationMapper;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -114,5 +116,42 @@ class LocationServiceTest {
         .hasMessage(exceptionMessage);
     verify(locationMapper, times(1)).isNotLocationUnique(locationName, shelfNumber);
     verify(locationMapper, never()).update(any(Location.class));
+  }
+
+  @Test
+  public void 削除できること() {
+    // モックと検証のデータを用意
+    int id = 1;
+    String locationName = "新しい場所";
+    String shelfNumber = "新棚-1";
+    Location existingLocation = new Location(id, "倉庫", "スチール書庫-1");
+    Optional<Location> optionalLocation = Optional.of(existingLocation);
+
+    // マッパーの動きを定義
+    when(locationMapper.findById(id)).thenReturn(optionalLocation);
+    doNothing().when(locationMapper).delete(anyInt());
+
+    // テスト対象を実行
+    locationService.delete(optionalLocation.get().getId());
+
+    // スタブの呼び出しを検証
+    verify(locationMapper, times(1)).delete(1);
+  }
+
+  @Test
+  public void 存在しないIDを指定したとき例外が発生すること() {
+    // モックと検証のデータを用意
+    int id = 99;
+    Optional<Location> optionalLocation = Optional.empty();
+    String exceptionMessage = "location not found";
+
+    // マッパーの動きを定義
+    when(locationMapper.findById(id)).thenReturn(optionalLocation);
+
+    // 検証
+    assertThatThrownBy(() -> locationService.delete(id))
+        .isInstanceOf(LocationNotFoundException.class)
+        .hasMessage(exceptionMessage);
+    verify(locationMapper, never()).delete(anyInt());
   }
 }
