@@ -1,7 +1,7 @@
 package com.files.management.service;
 
 import com.files.management.entity.Location;
-import com.files.management.exception.DuplicateLocationException;
+import com.files.management.exception.DuplicateException;
 import com.files.management.exception.LocationNotFoundException;
 import com.files.management.mapper.LocationMapper;
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class LocationService {
   public Location insert(String locationName, String shelfNumber) {
     // 複合ユニークバリデーション
     if (locationMapper.isNotLocationUnique(locationName, shelfNumber)) {
-      throw new DuplicateLocationException("Location with location:" + locationName
+      throw new DuplicateException("Location with location:" + locationName
           + " and shelfNumber:" + shelfNumber + " already exists");
     }
     Location location = new Location(locationName, shelfNumber);
@@ -36,7 +36,7 @@ public class LocationService {
         () -> new LocationNotFoundException("location not found", HttpStatus.NOT_FOUND));
 
     if (locationMapper.isNotLocationUnique(locationName, shelfNumber)) {
-      throw new DuplicateLocationException("Location with location:" + locationName
+      throw new DuplicateException("Location with location:" + locationName
           + " and shelfNumber:" + shelfNumber + " already exists");
     }
     Location updateLocation = new Location(id, locationName, shelfNumber);
