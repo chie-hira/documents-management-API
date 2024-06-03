@@ -10,10 +10,10 @@ public class FileCategoryRequest {
   @NotBlank(message = "privacyType is required")
   private String privacyType;
 
-  @NotBlank(message = "storageYear is required")
-  private int storageYear;
+  @NotNull
+  private Integer storageYear;
 
-  public FileCategoryRequest(String privacyType, int storageYear) {
+  public FileCategoryRequest(String privacyType, Integer storageYear) {
     this.privacyType = privacyType;
     this.storageYear = storageYear;
   }
@@ -26,7 +26,7 @@ public class FileCategoryRequest {
     return privacyType;
   }
 
-  public int getStorageYear() {
+  public Integer getStorageYear() {
     return storageYear;
   }
 }

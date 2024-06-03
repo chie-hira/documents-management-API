@@ -1,8 +1,10 @@
 package com.files.management.controller;
 
+import com.files.management.controller.request.FileCategoryRequest;
 import com.files.management.controller.response.FileCategoryResponse;
 import com.files.management.entity.FileCategory;
 import com.files.management.service.FileCategoryService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ public class FileCategoryController {
 
   @PostMapping("/fileCategories")
   public ResponseEntity<FileCategoryResponse> insert(
-      @RequestBody FileCategory fileCategoryRequest,
+      @RequestBody @Valid FileCategoryRequest fileCategoryRequest,
       UriComponentsBuilder uriComponentsBuilder) {
     FileCategory fileCategory = fileCategoryService.insert(fileCategoryRequest.getPrivacyType(),
         fileCategoryRequest.getStorageYear());
