@@ -19,8 +19,7 @@ public class FileCategoryService {
   public FileCategory insert(String privacyType, int storageYear) {
     // 複合ユニークバリデーション
     if (fileCategoryMapper.isNotFileCategoryUnique(privacyType, storageYear)) {
-      throw new DuplicateException("FileCategory with privacyType:" + privacyType
-          + " and storageYear:" + storageYear + " already exists");
+      throw new DuplicateException("すでに登録済みのファイル分類情報です");
     }
     FileCategory fileCategory = new FileCategory(privacyType, storageYear);
     fileCategoryMapper.insert(fileCategory);

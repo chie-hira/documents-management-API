@@ -43,7 +43,7 @@ class FileCategoryServiceTest {
     // モックと検証のデータを用意
     String existingPrivacyType = "非公開";
     int existingStorageYear = 3;
-    String exceptionMessage = "FileCategory with privacyType:非公開 and storageYear:3 already exists";
+    String exceptionMessage = "すでに登録済みのファイル分類情報です";
 
     // モックの動作を定義
     when(fileCategoryMapper.isNotFileCategoryUnique(existingPrivacyType,
