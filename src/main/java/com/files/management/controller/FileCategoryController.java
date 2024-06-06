@@ -21,7 +21,7 @@ public class FileCategoryController {
     this.fileCategoryService = fileCategoryService;
   }
 
-  @PostMapping("/fileCategories")
+  @PostMapping("/file_categories")
   public ResponseEntity<FileCategoryResponse> insert(
       @RequestBody @Valid FileCategoryRequest fileCategoryRequest,
       UriComponentsBuilder uriComponentsBuilder) {
