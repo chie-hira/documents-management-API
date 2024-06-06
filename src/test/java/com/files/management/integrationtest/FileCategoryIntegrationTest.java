@@ -37,7 +37,7 @@ class FileCategoryIntegrationTest {
   @Test
   @DataSet(value = "datasets/insert_file_categories.yml, datasets/insert_files.yml")
   @Transactional
-  void ファイルカテゴリを登録できること() throws Exception {
+  void ファイル分類情報を登録できること() throws Exception {
     String privacyType = "公開";
     int storageYear = 3;
 
@@ -50,7 +50,7 @@ class FileCategoryIntegrationTest {
         }
         """;
 
-    String response = mockMvc.perform(MockMvcRequestBuilders.post("/fileCategories")
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/file_categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
         .andExpect(status().isCreated())
@@ -73,7 +73,7 @@ class FileCategoryIntegrationTest {
   @Test
   @DataSet(value = "datasets/insert_file_categories.yml, datasets/insert_files.yml")
   @Transactional
-  void 公開非公開を空でファイルカテゴリを作成しようとしたとき例外が投げられること()
+  void 開示区分を空でファイル分類情報を作成しようとしたとき例外が投げられること()
       throws Exception {
     String privacyType = "";
     int storageYear = 5;
@@ -88,7 +88,7 @@ class FileCategoryIntegrationTest {
 
     when(fileCategoryMapper.isNotFileCategoryUnique(privacyType, storageYear)).thenReturn(false);
 
-    String response = mockMvc.perform(MockMvcRequestBuilders.post("/fileCategories")
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/file_categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
         .andExpect(status().isBadRequest())
@@ -98,9 +98,9 @@ class FileCategoryIntegrationTest {
 
     JSONAssert.assertEquals("""
             {
-              "path": "/fileCategories",
+              "path": "/file_categories",
               "status": "400",
-              "message": "privacyType: privacyType is required",
+              "message": "privacyType: 開示区分は必須です",
               "timestamp": "2024-05-26T21:26:07.273723+09:00[Asia/Tokyo]",
               "error": "Bad Request"
             }
@@ -112,7 +112,7 @@ class FileCategoryIntegrationTest {
   @Test
   @DataSet(value = "datasets/insert_file_categories.yml, datasets/insert_files.yml")
   @Transactional
-  void 保存年が空でファイルカテゴリを作成しようとしたとき例外が投げられること()
+  void 保存年が空でファイル分類情報を作成しようとしたとき例外が投げられること()
       throws Exception {
     String privacyType = "非公開";
     Integer storageYear = null;
@@ -125,7 +125,7 @@ class FileCategoryIntegrationTest {
         }
         """;
 
-    String response = mockMvc.perform(MockMvcRequestBuilders.post("/fileCategories")
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/file_categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
         .andExpect(status().isBadRequest())
@@ -135,9 +135,9 @@ class FileCategoryIntegrationTest {
 
     JSONAssert.assertEquals("""
             {
-              "path": "/fileCategories",
+              "path": "/file_categories",
               "status": "400",
-              "message": "storageYear: must not be null",
+              "message": "storageYear: 保存年数は必須です",
               "timestamp": "2024-05-26T21:26:07.273723+09:00[Asia/Tokyo]",
               "error": "Bad Request"
             }
@@ -149,7 +149,7 @@ class FileCategoryIntegrationTest {
   @Test
   @DataSet(value = "datasets/insert_file_categories.yml, datasets/insert_files.yml")
   @Transactional
-  void 重複するファイルカテゴリを作成しようとしたとき例外が投げられること() throws Exception {
+  void 重複するファイル分類情報を作成しようとしたとき例外が投げられること() throws Exception {
     String privacyType = "非公開";
     int storageYear = 3;
 
@@ -163,7 +163,7 @@ class FileCategoryIntegrationTest {
 
     when(fileCategoryMapper.isNotFileCategoryUnique(privacyType, storageYear)).thenReturn(true);
 
-    String response = mockMvc.perform(MockMvcRequestBuilders.post("/fileCategories")
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/file_categories")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
         .andExpect(status().isConflict())
@@ -173,13 +173,52 @@ class FileCategoryIntegrationTest {
 
     JSONAssert.assertEquals("""
             {
-              "path": "/fileCategories",
+              "path": "/file_categories",
               "status": "409",
-              "message": "FileCategory with privacyType:非公開 and storageYear:3 already exists",
+              "message": "すでに登録済みのファイル分類情報です",
               "timestamp": "2024-05-26T21:26:07.273723+09:00[Asia/Tokyo]",
               "error": "Conflict"
             }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
+  }
+
+  @Test
+  @DataSet(value = "datasets/insert_file_categories.yml, datasets/insert_files.yml")
+  @Transactional
+  void 開示区分を公開非公開以外でファイル分類情報を作成しようとしたとき例外が投げられること()
+      throws Exception {
+    String privacyType = "限定公開";
+    int storageYear = 3;
+
+    // リクエスト作成
+    String requestBody = """
+        {
+          "privacyType": "限定公開",
+          "storageYear": 3
+        }
+        """;
+
+    when(fileCategoryMapper.isNotFileCategoryUnique(privacyType, storageYear)).thenReturn(false);
+
+    String response = mockMvc.perform(MockMvcRequestBuilders.post("/file_categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(status().isBadRequest())
+        .andReturn()
+        .getResponse()
+        .getContentAsString(StandardCharsets.UTF_8);
+
+    JSONAssert.assertEquals("""
+            {
+              "path": "/file_categories",
+              "status": "400",
+              "message": "privacyType: 開示区分は公開か非公開で指定してください",
+              "timestamp": "2024-05-26T21:26:07.273723+09:00[Asia/Tokyo]",
+              "error": "Bad Request"
+            }
+        """, response, new CustomComparator(JSONCompareMode.STRICT,
+        new Customization("timestamp", ((o1, o2) -> true))
+    ));
   }
 }
