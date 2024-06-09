@@ -1,0 +1,13 @@
+file_categories:
+  - id: 1
+    privacy_type: "公開"
+    storage_year: "2"
+  - id: 2
+    privacy_type: "公開"
+    storage_year: "5"
+  - id: 3
+    privacy_type: "非公開"
+    storage_year: "5"
+  - id: 4
+    privacy_type: "非公開"
+    storage_year: "10"

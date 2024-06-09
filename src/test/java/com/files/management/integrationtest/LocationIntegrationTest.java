@@ -167,7 +167,7 @@ class LocationIntegrationTest {
     String response = mockMvc.perform(MockMvcRequestBuilders.post("/locations")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
-        .andExpect(status().isMethodNotAllowed())
+        .andExpect(status().isConflict())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     // レスポンス検証
@@ -175,9 +175,9 @@ class LocationIntegrationTest {
         {
           "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
           "message": "Location with location:場所 and shelfNumber:棚 already exists",
-          "status": "405",
+          "status": "409",
           "path": "/locations",
-          "error": "Method Not Allowed"
+          "error": "Conflict"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));
@@ -324,7 +324,7 @@ class LocationIntegrationTest {
     String response = mockMvc.perform(MockMvcRequestBuilders.put("/locations/{id}", id)
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
-        .andExpect(status().isMethodNotAllowed())
+        .andExpect(status().isConflict())
         .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
     // レスポンス検証
@@ -332,9 +332,9 @@ class LocationIntegrationTest {
         {
           "timestamp": "2024-01-17T22:39:14.555576+09:00[Asia/Tokyo]",
           "message": "Location with location:場所 and shelfNumber:棚 already exists",
-          "status": "405",
+          "status": "409",
           "path": "/locations/1",
-          "error": "Method Not Allowed"
+          "error": "Conflict"
         }
         """, response, new CustomComparator(JSONCompareMode.STRICT,
         new Customization("timestamp", ((o1, o2) -> true))));

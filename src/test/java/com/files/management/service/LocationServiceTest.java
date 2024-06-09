@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.files.management.entity.Location;
-import com.files.management.exception.DuplicateLocationException;
+import com.files.management.exception.DuplicateException;
 import com.files.management.exception.LocationNotFoundException;
 import com.files.management.mapper.LocationMapper;
 import java.util.Optional;
@@ -57,7 +57,7 @@ class LocationServiceTest {
 
     // 検証　テスト対象を実行するとexceptionが発生するのでいきなり検証
     assertThatThrownBy(() -> locationService.insert(existingLocationName, existingShelfNumber))
-        .isInstanceOf(DuplicateLocationException.class)
+        .isInstanceOf(DuplicateException.class)
         .hasMessage(exceptionMessage);
     verify(locationMapper, times(1)).isNotLocationUnique(existingLocationName, existingShelfNumber);
     verify(locationMapper, never()).insert(any(Location.class));
@@ -112,7 +112,7 @@ class LocationServiceTest {
 
     // 検証
     assertThatThrownBy(() -> locationService.update(id, locationName, shelfNumber))
-        .isInstanceOf(DuplicateLocationException.class)
+        .isInstanceOf(DuplicateException.class)
         .hasMessage(exceptionMessage);
     verify(locationMapper, times(1)).isNotLocationUnique(locationName, shelfNumber);
     verify(locationMapper, never()).update(any(Location.class));

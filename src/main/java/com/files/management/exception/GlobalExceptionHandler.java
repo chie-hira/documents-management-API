@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(DuplicateLocationException.class)
+  @ExceptionHandler(DuplicateException.class)
   public ResponseEntity<Map<String, String>> handleDuplicateLocationException(
-      DuplicateLocationException e, HttpServletRequest request) {
+      DuplicateException e, HttpServletRequest request) {
     Map<String, String> body = Map.of(
         "timestamp", ZonedDateTime.now().toString(),
-        "status", String.valueOf(HttpStatus.METHOD_NOT_ALLOWED.value()),
-        "error", HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
+        "status", String.valueOf(HttpStatus.CONFLICT.value()),
+        "error", HttpStatus.CONFLICT.getReasonPhrase(),
         "message", e.getMessage(),
         "path", request.getRequestURI());
-    return new ResponseEntity<>(body, HttpStatus.METHOD_NOT_ALLOWED);
+    return new ResponseEntity<>(body, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
