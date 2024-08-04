@@ -1,0 +1,11 @@
+users:
+  - id: 1
+    name: "name1"
+    email: "name1@email.com"
+    password: "password1"
+    is_admin: "true"
+  - id: 2
+    name: "name2"
+    email: "name2@email.com"
+    password: "password2"
+    is_admin: "false"
