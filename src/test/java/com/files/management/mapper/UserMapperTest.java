@@ -5,11 +5,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.files.management.entity.User;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.transaction.annotation.Transactional;
 
 @DBRider
 @MybatisTest
