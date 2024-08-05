@@ -1,8 +1,7 @@
 package com.files.management.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -34,10 +33,7 @@ class UserServiceTest {
 
     // 検証
     assertNotNull(insertUser);
-    assertEquals("山田太郎", insertUser.getName());
-    assertEquals("taro@email.com", insertUser.getEmail());
-    assertEquals("password", insertUser.getPassword());
-    assertFalse(insertUser.getIsAdmin());
+    assertThat(insertUser).isEqualTo(new User("山田太郎", "taro@email.com", "password", false));
 
     verify(userMapper, times(1)).insert(insertUser);
 
