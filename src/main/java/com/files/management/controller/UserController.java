@@ -32,8 +32,8 @@ public class UserController {
         userRequest.getPassword(),
         userRequest.getIsAdmin()
     );
-    URI uriUser = uriComponentsBuilder.path("Users/{id}").buildAndExpand(user.getId()).toUri();
     int newId = user.getId();
+    URI uriUser = uriComponentsBuilder.path("Users/{id}").buildAndExpand(newId).toUri();
     UserResponse body = new UserResponse(
         "アカウントを登録しました",
         newId,
