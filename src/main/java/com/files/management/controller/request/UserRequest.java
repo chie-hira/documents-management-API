@@ -1,9 +1,12 @@
 package com.files.management.controller.request;
 
+import com.files.management.entity.User;
 import com.files.management.validator.UniqueEmail;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
+@Getter // Getterメソッドを自動生成
 public class UserRequest {
 
   @NotNull
@@ -24,20 +27,13 @@ public class UserRequest {
     this.isAdmin = isAdmin;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public boolean getIsAdmin() {
-    return isAdmin;
+  public User convertToEntity() {
+    User user = new User();
+    user.setName(this.name);
+    user.setEmail(this.email);
+    user.setPassword(this.password);
+    user.setIsAdmin(this.isAdmin);
+    return user;
   }
 
 }
