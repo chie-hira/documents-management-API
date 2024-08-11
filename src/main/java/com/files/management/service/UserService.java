@@ -16,13 +16,11 @@ public class UserService {
     this.userMapper = userMapper;
   }
 
-  public User insert(String name, String email, String password, boolean isAdmin) {
-    if (userMapper.isNotUserUnique(name, email)) {
+  public User insert(User user) {
+    if (userMapper.isNotUserUnique(user.getName(), user.getEmail())) {
       throw new DuplicateException("すでに登録済みのユーザーです");
     }
-    User user = new User(name, email, password, isAdmin);
     userMapper.insert(user);
     return user;
   }
-
 }

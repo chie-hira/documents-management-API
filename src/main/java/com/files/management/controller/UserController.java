@@ -26,19 +26,14 @@ public class UserController {
       @RequestBody @Valid UserRequest userRequest,
       UriComponentsBuilder uriComponentsBuilder
   ) {
-    User user = userService.insert(
-        userRequest.getName(),
-        userRequest.getEmail(),
-        userRequest.getPassword(),
-        userRequest.getIsAdmin()
-    );
+    User user = userService.insert(userRequest.convertToEntity());
     int newId = user.getId();
     URI uriUser = uriComponentsBuilder.path("Users/{id}").buildAndExpand(newId).toUri();
     UserResponse body = new UserResponse(
         "アカウントを登録しました",
         newId,
-        userRequest.getName(),
-        userRequest.getEmail(),
+        user.getName(),
+        user.getEmail(),
         user.getIsAdmin()
     );
     return ResponseEntity.created(uriUser).body(body);

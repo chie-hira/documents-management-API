@@ -29,7 +29,8 @@ class UserServiceTest {
   @Test
   public void ユーザーを登録できること() {
     // テスト対象を実行
-    User insertUser = userService.insert("山田太郎", "taro@email.com", "password", false);
+    User user = new User("山田太郎", "taro@email.com", "password", false);
+    User insertUser = userService.insert(user);
 
     // 検証
     assertNotNull(insertUser);
@@ -50,8 +51,9 @@ class UserServiceTest {
     when(userMapper.isNotUserUnique(existingUserName, existingUserEmail)).thenReturn(true);
 
     // 検証　テスト対象を実行するとexceptionが発生するのでいきなり検証
+    User user = new User(existingUserName, existingUserEmail, "password", false);
     assertThatThrownBy(
-        () -> userService.insert(existingUserName, existingUserEmail, "password", false))
+        () -> userService.insert(user))
         .isInstanceOf(DuplicateException.class)
         .hasMessage(exceptionMessage);
     verify(userMapper, times(1)).isNotUserUnique(existingUserName, existingUserEmail);
